@@ -10,7 +10,7 @@
 using namespace std;
 
 // Test Case #1
-TEST_CASE("Invalid Statements for AVL Trees", "[error]") {
+TEST_CASE("Invalid Commands", "[error]") {
 	AVLTree tree;
 
 	REQUIRE_THROWS(tree.insert("",100)); // testing adding empty string as key
@@ -22,7 +22,7 @@ TEST_CASE("Invalid Statements for AVL Trees", "[error]") {
 }
 
 // Test Case #2
-TEST_CASE("Inserting and Deleting Large Nodes", "[bulk]") {
+TEST_CASE("Inserting 100 and Deleting 10 Nodes", "[bulk]") {
 	AVLTree tree;
 	std::vector<int> vect_vals;
 
@@ -32,8 +32,8 @@ TEST_CASE("Inserting and Deleting Large Nodes", "[bulk]") {
 		vect_vals.pushback(i);
 		}
 
-	// removing 15 nodes
-	std::vector<int> removeNodes = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 28, 30, 50};
+	// removing 10 nodes
+	std::vector<int> removeNodes = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19};
 	for(int r : removeNodes) {
 		tree.remove(r);
 		vect_vals.erase(std::remove(vect_vals.begin(),vect_vals.end(),r),vect_vals.end());

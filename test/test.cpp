@@ -1,53 +1,96 @@
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include "AVL.h"
 
-// uncomment and replace the following with your own headers
-// #include "AVL.h"
+// Name: Thorin Groth
+// UFID: 21975652
 
 using namespace std;
 
-// the syntax for defining a test is below. It is important for the name to be unique, but you can group multiple tests with [tags]. A test can have [multiple][tags] using that syntax.
-TEST_CASE("Example Test Name - Change me!", "[flag]"){
-	// instantiate any class members that you need to test here
-	int one = 1;
+// Test Case #1
+TEST_CASE("Invalid Statements for AVL Trees", "[error]") {
+	AVLTree tree;
 
-	// anything that evaluates to false in a REQUIRE block will result in a failing test 
-	REQUIRE(one == 0); // fix me!
+	REQUIRE_THROWS(tree.insert("",100)); // testing adding empty string as key
+	REQUIRE_THROWS(tree.remove(1000000)); // testing removing node that doesn't exist
+	REQUIRE_THROWS(tree.insert("Test",-50)); // testing negative numbers
+	REQUIRE_THROWS(tree.insert("34320",12)); // testing only numbers for key
+	REQUIRE_THROWS(tree.insert("Thor1n",100)); // testing invalid key with test and numbers
 
-	// all REQUIRE blocks must evaluate to true for the whole test to pass
-	REQUIRE(false); // also fix me!
 }
 
-TEST_CASE("Test 2", "[flag]"){
-	// you can also use "sections" to share setup code between tests, for example:
-	int one = 1;
+// Test Case #2
+TEST_CASE("Inserting and Deleting Large Nodes", "[bulk]") {
+	AVLTree tree;
+	std::vector<int> vect_vals;
 
-	SECTION("num is 2") {
-		int num = one + 1;
-		REQUIRE(num == 2);
-	};
+	// adding 200 nodes
+	for(int i = 1, i < 200, i++) {
+		tree.insert(i);
+		vect_vals.pushback(i);
+		}
 
-	SECTION("num is 3") {
-		int num = one + 2;
-		REQUIRE(num == 3);
-	};
+	// removing 15 nodes
+	std::vector<int> removeNodes = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 28, 30, 50};
+	for(int r : removeNodes) {
+		tree.remove(r);
+		vect_vals.erase(std::remove(vect_vals.begin(),vect_vals.end(),r),vect_vals.end());
+	}
 
-	// each section runs the setup code independently to ensure that they don't affect each other
+	REQUIRE(tree.inorder() == vect_vals);
 }
 
-// you must write 5 unique, meaningful tests for credit on the testing portion of this project!
+// Test Case #3
+TEST_CASE("Search Functionality", "[search]") {
+    AVLTree tree;
 
-// the provided test from the template is below.
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
 
-TEST_CASE("Example BST Insert", "[flag]"){
-	/*
-		MyAVLTree tree;   // Create a Tree object
-		tree.insert(3);
-		tree.insert(2);
-		tree.insert(1);
-		std::vector<int> actualOutput = tree.inorder();
-		std::vector<int> expectedOutput = {1, 2, 3};
-		REQUIRE(expectedOutput.size() == actualOutput.size());
-		REQUIRE(actualOutput == expectedOutput);
-	*/
+    REQUIRE(tree.find(10) == true);
+    REQUIRE(tree.find(20) == true);
+    REQUIRE(tree.find(30) == true);
+    REQUIRE(tree.find(40) == false);
+}
+
+// Test Case #4
+TEST_CASE("Tree Balance After Multiple Operations", "[balance]") {
+    AVLTree tree;
+
+    tree.insert(50);
+    tree.insert(30);
+    tree.insert(70);
+    tree.insert(20);
+    tree.insert(40);
+    tree.insert(60);
+    tree.insert(80);
+
+    tree.remove(70);
+    tree.remove(30);
+
+    REQUIRE(tree.isBalanced());
+}
+
+// Test Case #5
+TEST_CASE("Rotating AVL Tree", "[rotation]") {
+    AVLTree tree;
+
+    tree.insert(30);
+    tree.insert(20);
+    tree.insert(10);
+    REQUIRE(tree.isBalanced());
+
+    tree.insert(40);
+    tree.insert(50);
+    REQUIRE(tree.isBalanced());
+
+    tree.insert(25);
+    REQUIRE(tree.isBalanced());
+
+    tree.insert(45);
+    tree.insert(42);
+    REQUIRE(tree.isBalanced());
 }
